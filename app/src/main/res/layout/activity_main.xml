@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#292929"
+    tools:context=".MainActivity">
+
+    <com.skydoves.colorpickerview.ColorPickerView
+        android:id="@+id/colorPickerView"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        app:actionMode="always"
+        app:debounceDuration="200"
+        app:layout_constraintBottom_toTopOf="@+id/brightnessSlide"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.skydoves.colorpickerview.sliders.BrightnessSlideBar
+        android:id="@+id/brightnessSlide"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:borderColor_BrightnessSlider="@android:color/darker_gray"
+        app:borderSize_BrightnessSlider="5"
+        app:debounceDuration="200"
+        app:layout_constraintBottom_toTopOf="@id/speed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/colorPickerView"
+        app:selector_BrightnessSlider="@drawable/wheel" />
+
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/speed"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:valueFrom="1.0"
+        android:valueTo="100.0"
+        android:stepSize="1.0"
+        app:layout_constraintBottom_toTopOf="@+id/color1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/brightnessSlide"/>
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/border1"
+        android:layout_width="40dp"
+        android:layout_height="35dp"
+        android:layout_alignParentTop="true"
+        android:background="#FFFFFF"
+        android:visibility="invisible"
+        card_view:cardCornerRadius="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/color1"
+        app:layout_constraintLeft_toLeftOf="@+id/color1"
+        app:layout_constraintRight_toRightOf="@+id/color1"
+        app:layout_constraintTop_toTopOf="@+id/color1" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/border2"
+        android:layout_width="40dp"
+        android:layout_height="35dp"
+        android:layout_alignParentTop="true"
+        android:background="#FFFFFF"
+        android:visibility="invisible"
+        card_view:cardCornerRadius="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/color1"
+        app:layout_constraintLeft_toRightOf="@+id/color1"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/color1" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/color1"
+        android:layout_width="35dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:background="#000000"
+        android:visibility="visible"
+        card_view:cardCornerRadius="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/fade"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/color2"
+        app:layout_constraintTop_toBottomOf="@id/speed" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/color2"
+        android:layout_width="35dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:background="#FFFFFF"
+        android:visibility="visible"
+        card_view:cardCornerRadius="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/color1"
+        app:layout_constraintLeft_toRightOf="@+id/color1"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/color1" />
+
+    <Button
+        android:id="@+id/fade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:onClick="doFade"
+        android:text="Fade"
+        app:layout_constraintBottom_toTopOf="@+id/snake"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/rainbow"
+        app:layout_constraintTop_toBottomOf="@+id/color1" />
+
+    <Button
+        android:id="@+id/rainbow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:onClick="rainbow"
+        android:text="Rainbow"
+        app:layout_constraintBottom_toTopOf="@id/off"
+        app:layout_constraintLeft_toRightOf="@id/fade"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/color2" />
+
+    <Button
+        android:id="@+id/off"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:onClick="turnOff"
+        android:text="Off"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/snake"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rainbow" />
+
+    <Button
+        android:id="@+id/snake"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:onClick="snake"
+        android:text="Snake"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/off"
+        app:layout_constraintTop_toBottomOf="@id/fade" />
+
+
+    <View
+        android:id="@+id/back"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_alignParentTop="true"
+        android:background="#FFFFFF"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fade" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
