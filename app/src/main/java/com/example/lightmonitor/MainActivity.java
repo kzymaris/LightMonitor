@@ -2,11 +2,15 @@ package com.example.lightmonitor;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -38,10 +42,12 @@ import java.util.Arrays;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.ViewPager;
 
 import static android.view.View.INVISIBLE;
@@ -60,6 +66,7 @@ class SavedValues{
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "LightMonitor";
+    private Context c;
     private boolean permissionGranted;
     private static final int REQUEST_PERMISSION_WRITE = 1001;
     private static final String FILE_NAME = "exercises.json";
@@ -81,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        c = this;
         color = findViewById(R.id.colorPickerView);
         layout = findViewById(R.id.layout);
         box1 = findViewById(R.id.color1);
@@ -93,6 +101,9 @@ public class MainActivity extends AppCompatActivity {
         adapter = new EffectsAdapter(getSupportFragmentManager());
         pager = findViewById(R.id.pager);
         pager.setAdapter(adapter);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
 
         FileReader fr = null;
@@ -133,7 +144,10 @@ public class MainActivity extends AppCompatActivity {
                     colors.selectedColor[0] = envelope.getArgb()[1];
                     colors.selectedColor[1] = envelope.getArgb()[2];
                     colors.selectedColor[2] = envelope.getArgb()[3];
-                    if(fromUser){
+                    SharedPreferences sharedPreferences =
+                            PreferenceManager.getDefaultSharedPreferences(c);
+                    boolean changeOnSelect = sharedPreferences.getBoolean ("changeOnSelect", true);
+                    if(fromUser && changeOnSelect){
                         sendRequest(color.getContext(), "wipe", false);
                     }
                 }else if(selectMode == 1){
@@ -285,6 +299,29 @@ public class MainActivity extends AppCompatActivity {
 // Add the request to the RequestQueue.
         Log.i(TAG, "Body is: " + mRequestBody);
         queue.add(stringRequest);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 

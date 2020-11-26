@@ -18,10 +18,11 @@ public class EffectsAdapter extends FragmentPagerAdapter {
     EffectsAdapter(@NonNull FragmentManager fm) {
         super(fm);
         list = new ArrayList<>();
+        list.add(new ButtonSettings("wipe",false));
         list.add(new ButtonSettings("fade",true));
         list.add(new ButtonSettings("rainbow",false));
-        list.add(new ButtonSettings("snake",true));
         list.add(new ButtonSettings("off",false));
+        list.add(new ButtonSettings("snake",true));
         list.add(new ButtonSettings("pride",false));
     }
 
