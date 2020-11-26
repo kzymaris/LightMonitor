@@ -3,18 +3,17 @@ package com.example.lightmonitor;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.slider.Slider;
@@ -33,23 +32,26 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
 class SavedValues{
-    public int[] selectedColor = {0,0,0};
-    public int[] color1 = {0,0,0};
-    public int[] color2 = {255,255,255};
-    public int speed = 0;
+    int[] selectedColor = {0,0,0};
+    int[] color1 = {0,0,0};
+    int[] color2 = {255,255,255};
+    int speed = 0;
     SavedValues(){
 
     }
@@ -68,10 +70,12 @@ public class MainActivity extends AppCompatActivity {
     public CardView box2;
     public CardView border1;
     public CardView border2;
-    public View back;
     public Slider slider;
     public SavedValues colors;
     public int selectMode = 0;
+
+    public EffectsAdapter adapter;
+    public ViewPager pager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,13 +83,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         color = findViewById(R.id.colorPickerView);
         layout = findViewById(R.id.layout);
-        back = findViewById(R.id.back);
         box1 = findViewById(R.id.color1);
         box2 = findViewById(R.id.color2);
         border1 = findViewById(R.id.border1);
         border2 = findViewById(R.id.border2);
         slider = findViewById(R.id.speed);
         colors = new SavedValues();
+
+        adapter = new EffectsAdapter(getSupportFragmentManager());
+        pager = findViewById(R.id.pager);
+        pager.setAdapter(adapter);
 
 
         FileReader fr = null;
@@ -94,9 +101,9 @@ public class MainActivity extends AppCompatActivity {
             fr = new FileReader(f);
             colors = new Gson().fromJson(fr, SavedValues.class);
             slider.setValue(colors.speed > slider.getValueFrom() ? colors.speed : slider.getValueFrom());
-            box1.setCardBackgroundColor((255 & 0xff) << 24 | (colors.color1[0] & 0xff) << 16 | (colors.color1[1] & 0xff) << 8 | (colors.color1[2] & 0xff));
-            box2.setCardBackgroundColor((255 & 0xff) << 24 | (colors.color2[0] & 0xff) << 16 | (colors.color2[1] & 0xff) << 8 | (colors.color2[2] & 0xff));
-            Log.i(TAG, "Color: "+ colors.selectedColor);
+            box1.setCardBackgroundColor((0xff) << 24 | (colors.color1[0] & 0xff) << 16 | (colors.color1[1] & 0xff) << 8 | (colors.color1[2] & 0xff));
+            box2.setCardBackgroundColor((0xff) << 24 | (colors.color2[0] & 0xff) << 16 | (colors.color2[1] & 0xff) << 8 | (colors.color2[2] & 0xff));
+            Log.i(TAG, "Color: "+ Arrays.toString(colors.selectedColor));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
@@ -122,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if(selectMode == 0){
-                    back.setBackgroundColor(envelope.getColor());
+                    pager.setBackgroundColor(envelope.getColor());
                     colors.selectedColor[0] = envelope.getArgb()[1];
                     colors.selectedColor[1] = envelope.getArgb()[2];
                     colors.selectedColor[2] = envelope.getArgb()[3];
@@ -180,9 +187,10 @@ public class MainActivity extends AppCompatActivity {
 
         if(!permissionGranted){
             checkPermissions();
-            return;
         }
     }
+
+
 
     public void hideBorders(){
         selectMode = 0;
@@ -214,24 +222,6 @@ public class MainActivity extends AppCompatActivity {
         ColorPickerPreferenceManager.getInstance(layout.getContext()).saveColorPickerData(color);
         super.onStop();
     }
-
-    public void rainbow(View view){
-        sendRequest(view.getContext(), "rainbow", false);
-    }
-
-    public void doFade(View view){
-        sendRequest(view.getContext(), "fade", true);
-    }
-
-    public void snake(View view){
-        sendRequest(view.getContext(), "snake", true);
-    }
-
-    public void turnOff(View view){
-        colors.selectedColor = new int[]{0, 0, 0};
-        sendRequest(view.getContext(), "wipe", false);
-    }
-
 
     public void sendRequest(Context c, String type, Boolean twoColors){
 
@@ -284,14 +274,10 @@ public class MainActivity extends AppCompatActivity {
                 return "application/json; charset=utf-8";
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
-            public byte[] getBody() throws AuthFailureError {
-                try {
-                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee) {
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
-                    return null;
-                }
+            public byte[] getBody() {
+                return mRequestBody.getBytes(StandardCharsets.UTF_8);
             }
 
         };
@@ -309,12 +295,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Initiate request for permissions.
-    private boolean checkPermissions() {
+    private void checkPermissions() {
 
         if (!isExternalStorageWritable()) {
             Toast.makeText(this, "This app only works on devices with usable external storage",
                     Toast.LENGTH_SHORT).show();
-            return false;
+            return;
         }
 
         int permissionCheck = ContextCompat.checkSelfPermission(this,
@@ -323,28 +309,23 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     REQUEST_PERMISSION_WRITE);
-            return false;
-        } else {
-            return true;
         }
     }
 
     // Handle permissions result
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
+                                           @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_PERMISSION_WRITE:
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    permissionGranted = true;
-                    Toast.makeText(this, "External storage permission granted",
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "You must grant permission!", Toast.LENGTH_SHORT).show();
-                }
-                break;
+        if (requestCode == REQUEST_PERMISSION_WRITE) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                permissionGranted = true;
+                Toast.makeText(this, "External storage permission granted",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "You must grant permission!", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

@@ -82,11 +82,11 @@
         android:background="#000000"
         android:visibility="visible"
         card_view:cardCornerRadius="5dp"
-        app:layout_constraintBottom_toTopOf="@+id/fade"
+        app:layout_constraintBottom_toTopOf="@id/pager"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/color2"
         app:layout_constraintTop_toBottomOf="@id/speed" />
-
+<!--app:layout_constraintBottom_toTopOf="@+id/fade"-->
     <androidx.cardview.widget.CardView
         android:id="@+id/color2"
         android:layout_width="35dp"
@@ -100,65 +100,15 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/color1" />
 
-    <Button
-        android:id="@+id/fade"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:onClick="doFade"
-        android:text="Fade"
-        app:layout_constraintBottom_toTopOf="@+id/snake"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/rainbow"
-        app:layout_constraintTop_toBottomOf="@+id/color1" />
-
-    <Button
-        android:id="@+id/rainbow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:onClick="rainbow"
-        android:text="Rainbow"
-        app:layout_constraintBottom_toTopOf="@id/off"
-        app:layout_constraintLeft_toRightOf="@id/fade"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/color2" />
-
-    <Button
-        android:id="@+id/off"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:onClick="turnOff"
-        android:text="Off"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/snake"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rainbow" />
-
-    <Button
-        android:id="@+id/snake"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:onClick="snake"
-        android:text="Snake"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/off"
-        app:layout_constraintTop_toBottomOf="@id/fade" />
-
-
-    <View
-        android:id="@+id/back"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:layout_alignParentTop="true"
         android:background="#FFFFFF"
-        android:visibility="visible"
+        android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/fade" />
+        app:layout_constraintTop_toBottomOf="@id/color1"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
