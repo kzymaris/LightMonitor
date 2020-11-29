@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                             PreferenceManager.getDefaultSharedPreferences(c);
                     boolean changeOnSelect = sharedPreferences.getBoolean ("changeOnSelect", true);
                     if(fromUser && changeOnSelect){
-                        sendRequest(color.getContext(), "wipe", false);
+                        sendRequest(color.getContext(), "solid", false);
                     }
                 }else if(selectMode == 1){
                     box1.setCardBackgroundColor(envelope.getColor());
@@ -242,7 +242,12 @@ public class MainActivity extends AppCompatActivity {
         hideBorders();
 // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(c);
-        String url ="http://108.20.217.88:301/";
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(c);
+        String ip = sharedPreferences.getString ("ip", "");
+        String port = sharedPreferences.getString ("port", "");
+        String offset = sharedPreferences.getString ("offset", "0");
+        String url ="http://" + ip + ":" + port + "/";
 
         JSONObject jsonBody = new JSONObject();
         try {
@@ -259,6 +264,7 @@ public class MainActivity extends AppCompatActivity {
                 jsonBody.put("r1", Integer.toString(colors.selectedColor[0]));
                 jsonBody.put("g1", Integer.toString(colors.selectedColor[1]));
                 jsonBody.put("b1", Integer.toString(colors.selectedColor[2]));
+                jsonBody.put("off", offset);
             }
 
         } catch (JSONException e) {

@@ -18,12 +18,14 @@ public class EffectsAdapter extends FragmentPagerAdapter {
     EffectsAdapter(@NonNull FragmentManager fm) {
         super(fm);
         list = new ArrayList<>();
-        list.add(new ButtonSettings("wipe",false));
+        list.add(new ButtonSettings("solid",false));
         list.add(new ButtonSettings("fade",true));
         list.add(new ButtonSettings("rainbow",false));
         list.add(new ButtonSettings("off",false));
         list.add(new ButtonSettings("snake",true));
         list.add(new ButtonSettings("pride",false));
+        list.add(new ButtonSettings("swap",true));
+        list.add(new ButtonSettings("music",false));
     }
 
     @NonNull
@@ -43,7 +45,7 @@ public class EffectsAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return (list.size()/4)+1;
+        return (list.size()/5)+1;
     }
 }
 

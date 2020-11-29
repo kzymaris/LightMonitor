@@ -55,7 +55,7 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:valueFrom="1.0"
-        android:valueTo="100.0"
+        android:valueTo="200.0"
         android:stepSize="1.0"
         app:layout_constraintBottom_toTopOf="@+id/color1"
         app:layout_constraintLeft_toLeftOf="parent"

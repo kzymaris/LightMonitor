@@ -1,9 +1,26 @@
 
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <SwitchPreferenceCompat
         app:key="changeOnSelect"
         app:title="Change color on selection"/>
+
+    <EditTextPreference
+        app:key="ip"
+        app:title="IP Address"
+        app:useSimpleSummaryProvider="true"/>
+
+    <EditTextPreference
+        app:key="port"
+        app:title="Port"
+        app:useSimpleSummaryProvider="true"/>
+
+    <EditTextPreference
+        app:key="offset"
+        app:title="Music Offset"
+        app:useSimpleSummaryProvider="true"
+        android:defaultValue="0"/>
 
 
 </PreferenceScreen>
